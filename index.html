@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Down</title>
+    <style>
+        /* Reset */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: black;
+            color: #f00;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        @font-face {
+            font-family: 'CyberFont';
+            src: url('https://fonts.gstatic.com/s/sharetechmono/v11/J7aHnp1uDWRBEqV98dVQztYldFcLow.ttf') format('truetype');
+        }
+
+        .container {
+            text-align: center;
+            font-family: 'CyberFont', monospace;
+            font-size: 40px;
+            color: #f00;
+            text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 20px #ff0000;
+            animation: glitch 1.5s infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0, 0); opacity: 1; }
+            20% { transform: translate(-2px, 2px); opacity: 0.8; }
+            40% { transform: translate(2px, -2px); opacity: 1; }
+            60% { transform: translate(-1px, 1px); opacity: 0.9; }
+            80% { transform: translate(1px, -1px); opacity: 1; }
+            100% { transform: translate(0, 0); opacity: 1; }
+        }
+
+        .matrix {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SERVER DOWN</h1>
+    </div>
+    <div class="matrix">
+        <canvas id="matrix"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@#$%^&*()';
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0f0';
+            ctx.font = `${fontSize}px monospace`;
+
+            drops.forEach((y, x) => {
+                const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                ctx.fillText(text, x * fontSize, y * fontSize);
+
+                if (y * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[x] = 0;
+                }
+
+                drops[x]++;
+            });
+        }
+
+        setInterval(drawMatrix, 50);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
